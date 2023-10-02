@@ -1,0 +1,7 @@
+# roles/install_nginx_rpm/handlers/main.yml
+
+---
+- name: Restart Nginx
+  service:
+    name: nginx
+    state: restarted
