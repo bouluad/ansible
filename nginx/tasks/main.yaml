@@ -1,0 +1,26 @@
+# roles/install_nginx_rpm/tasks/main.yml
+
+---
+- name: Download Nginx RPM
+  get_url:
+    url: https://nginx.org/packages/rhel/8/x86_64/RPMS/nginx-{{ nginx_version }}.rpm
+    dest: /tmp/nginx-{{ nginx_version }}.rpm
+  vars:
+    nginx_version: 1.20.0 # Change to the desired Nginx version
+
+- name: Install Nginx from RPM
+  yum:
+    name: /tmp/nginx-{{ nginx_version }}.rpm
+    state: present
+
+- name: Copy Nginx configuration template
+  template:
+    src: nginx.conf.j2
+    dest: /etc/nginx/nginx.conf
+  notify: Restart Nginx
+
+- name: Start Nginx service and enable it on boot
+  service:
+    name: nginx
+    state: started
+    enabled: yes
